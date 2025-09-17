@@ -20,12 +20,12 @@ public class JoystickView extends View {
     private float joystickX;
     private float joystickY;
     private boolean isPressed = false;
-    private boolean isActive = false;
 
     private JoystickListener listener;
 
     public interface JoystickListener {
-        void onJoystickMoved(float xPercent, float yPercent);
+        void onJoystickActive(float xPercent, float yPercent);
+        void onJoystickInactive();
     }
 
     public JoystickView(Context context) {
@@ -35,11 +35,6 @@ public class JoystickView extends View {
 
     public JoystickView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
-    }
-
-    public JoystickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
         init();
     }
 
@@ -73,45 +68,39 @@ public class JoystickView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                return handleActionDown(event);
+                if (isInCircle(x, y)) {
+                    isPressed = true;
+                    updateJoystickPosition(x, y);
+                    return true;
+                }
+                break;
+
             case MotionEvent.ACTION_MOVE:
-                return handleActionMove(event);
+                if (isPressed) {
+                    updateJoystickPosition(x, y);
+                    return true;
+                }
+                break;
+
             case MotionEvent.ACTION_UP:
-                return handleActionUp();
-        }
-        return true;
-    }
-
-    private boolean handleActionDown(MotionEvent event) {
-        if (isInCircle(event.getX(), event.getY())) {
-            isPressed = true;
-            isActive = true;
-            updateJoystickPosition(event.getX(), event.getY());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean handleActionMove(MotionEvent event) {
-        if (isPressed) {
-            updateJoystickPosition(event.getX(), event.getY());
-            return true;
+                if (isPressed) {
+                    isPressed = false;
+                    joystickX = centerX;
+                    joystickY = centerY;
+                    invalidate();
+                    if (listener != null) {
+                        listener.onJoystickInactive();
+                    }
+                    return true;
+                }
+                break;
         }
         return false;
-    }
-
-    private boolean handleActionUp() {
-        isPressed = false;
-        isActive = false;
-        joystickX = centerX;
-        joystickY = centerY;
-        invalidate();
-        if (listener != null) {
-            listener.onJoystickMoved(0, 0);
-        }
-        return true;
     }
 
     private boolean isInCircle(float x, float y) {
@@ -137,7 +126,7 @@ public class JoystickView extends View {
         if (listener != null) {
             float xPercent = dx / outerCircleRadius;
             float yPercent = dy / outerCircleRadius;
-            listener.onJoystickMoved(xPercent, yPercent);
+            listener.onJoystickActive(xPercent, yPercent);
         }
     }
 
@@ -145,7 +134,7 @@ public class JoystickView extends View {
         this.listener = listener;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isPressed() {
+        return isPressed;
     }
 }

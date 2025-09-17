@@ -9,38 +9,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
         android:padding="20dp">
 
-        <Button
-            android:id="@+id/buttonLeft"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="5dp"
-            android:text="◀"
-            android:textSize="30sp" />
+        <LinearLayout
+            android:id="@+id/controlsLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/buttonRight"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="5dp"
-            android:text="▶"
-            android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonLeft"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:text="◀"
+                android:textSize="30sp" />
 
+            <Button
+                android:id="@+id/buttonRight"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:text="▶"
+                android:textSize="30sp" />
+        </LinearLayout>
 
         <com.example.trafficracer.JoystickView
             android:id="@+id/joystickView"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_gravity="right|bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="5dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonRestart"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:text="RESTART"
+        android:textSize="30sp"
+        android:textColor="#FFFFFF"
+        android:visibility="gone" />
 
 </FrameLayout>

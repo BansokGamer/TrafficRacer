@@ -21,7 +21,7 @@ public class HomingEnemy {
     }
 
     public void update() {
-
+        // Двигаемся вниз
         y += speed;
 
         if (player != null) {
